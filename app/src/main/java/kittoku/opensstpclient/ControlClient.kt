@@ -91,6 +91,7 @@ internal class ControlClient(internal val vpnService: SstpVpnService) :
         jobControl = launch(handler) {
             val controlBuffer = ByteBuffer.allocate(CONTROL_BUFFER_SIZE)
 
+            var first = false
             while (isActive) {
                 val candidate = controlQueue.take()
                 if (candidate == 0) break
@@ -112,6 +113,12 @@ internal class ControlClient(internal val vpnService: SstpVpnService) :
                 controlBuffer.flip()
 
                 sslTerminal.send(controlBuffer)
+
+                if(!first) {
+                    inform("Use Protocol: " + (sslTerminal.getProtocols()?.get(0) ?: "NULL"), null)
+                    inform("Use Cipher Suite: " + (sslTerminal.getCipherSuites()?.get(0) ?: "NULL"), null)
+                    first = true
+                }
             }
         }
 

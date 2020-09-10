@@ -5,6 +5,7 @@ import android.os.ParcelFileDescriptor
 import kittoku.opensstpclient.ControlClient
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.net.Inet6Address
 import java.net.InetAddress
 
 
@@ -32,13 +33,22 @@ internal class IpTerminal(parent: ControlClient) : Terminal(parent) {
             setting.customPrefix ?: getPrefixLength(setting.currentIp)
         )
 
+        builder.addAddress(Inet6Address.getByName("fecd:8888::100"), 128)
+
         if (!setting.mgDns.isRejected) {
             builder.addDnsServer(InetAddress.getByAddress(setting.currentDns))
         }
 
         builder.setMtu(setting.currentMtu)
 
+        builder.allowBypass()
+        builder.setBlocking(true)
+
         builder.addRoute("0.0.0.0", 0)
+        builder.addRoute("::", 0)
+
+        builder.addDnsServer("8.8.8.8")
+        builder.addDnsServer("8.8.4.4")
 
         if (Build.VERSION.SDK_INT >= 21) builder.setBlocking(true)
 

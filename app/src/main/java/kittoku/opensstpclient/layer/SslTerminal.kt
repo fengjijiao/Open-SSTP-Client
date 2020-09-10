@@ -128,4 +128,12 @@ internal class SslTerminal(parent: ControlClient) : Terminal(parent) {
     override fun release() {
         if (::socket.isInitialized) socket.close()
     }
+
+    internal fun getCipherSuites() : Array<out String>? {
+        return socket.sslParameters.cipherSuites
+    }
+
+    internal fun getProtocols() : Array<out String>? {
+        return socket.sslParameters.protocols
+    }
 }

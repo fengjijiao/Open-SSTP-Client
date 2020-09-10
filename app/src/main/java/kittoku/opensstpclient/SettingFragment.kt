@@ -20,7 +20,8 @@ internal val sslMap = mapOf(
     1 to "SSLv3",
     2 to "TLSv1",
     3 to "TLSv1.1",
-    4 to "TLSv1.2"
+    4 to "TLSv1.2",
+    5 to "TLSv1.3"
 )
 
 class SettingFragment : Fragment() {
